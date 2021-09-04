@@ -9,6 +9,9 @@ const btnCloseModal = document.querySelector(".btn--close-modal");
 const btnsOpenModal = document.querySelectorAll(".btn--show-modal");
 const btnScrollTo = document.querySelector(".btn--scroll-to");
 const section1 = document.getElementById("section--1");
+const navLinks = document.querySelector(".nav__links");
+
+/////////////////////////
 
 const openModal = function (e) {
   e.preventDefault();
@@ -21,7 +24,7 @@ const closeModal = function () {
   overlay.classList.add("hidden");
 };
 
-btnsOpenModal.forEach(btn => btn.addEventListener("click", openModal));
+btnsOpenModal.forEach((btn) => btn.addEventListener("click", openModal));
 
 btnCloseModal.addEventListener("click", closeModal);
 overlay.addEventListener("click", closeModal);
@@ -32,8 +35,20 @@ document.addEventListener("keydown", function (e) {
   }
 });
 
+// Button Scrolling
 btnScrollTo.addEventListener("click", function (e) {
   section1.scrollIntoView({ behavior: "smooth" });
+});
+
+// Page Navigation
+navLinks.addEventListener("click", function (e) {
+  e.preventDefault();
+  const id = e.target.getAttribute("href");
+  console.log(id);
+
+  if (e.target.classList.contains("nav__link")) {
+    document.querySelector(id).scrollIntoView({ behavior: "smooth" });
+  }
 });
 
 // ///////////////////////
