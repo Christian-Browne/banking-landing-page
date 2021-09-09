@@ -116,7 +116,6 @@ headerObserver.observe(header);
 const allSections = document.querySelectorAll(".section");
 
 const revealSections = function (entries, observer) {
-  console.log("reveal");
   const [entry] = entries;
   if (!entry.isIntersecting) return;
 
@@ -131,9 +130,87 @@ const sectionsObserver = new IntersectionObserver(revealSections, {
 
 // Callback function to reveal sections
 allSections.forEach(function (section) {
-  section.classList.add("section--hidden");
+  // section.classList.add("section--hidden");
   sectionsObserver.observe(section);
 });
+
+// Lazy loading images
+const imgTarget = document.querySelectorAll("img[data-src]");
+
+const imgLazy = function (entries, observer) {
+  const [entry] = entries;
+
+  if (!entry.isIntersecting) return;
+
+  entry.target.src = entry.target.dataset.src;
+
+  entry.target.addEventListener("load", function () {
+    entry.target.classList.remove("lazy-img");
+  });
+
+  observer.unobserve(entry.target);
+};
+const imgObserver = new IntersectionObserver(imgLazy, {
+  root: null,
+  threshold: 0.1,
+});
+
+imgTarget.forEach((img) => {
+  imgObserver.observe(img);
+});
+
+// Slider
+const slides = document.querySelectorAll(".slide");
+const maxSlide = slides.length;
+const btnRight = document.querySelector(".slider__btn--right");
+const btnLeft = document.querySelector(".slider__btn--left");
+const dotContainer = document.querySelector(".dots");
+let curSlide = 0;
+
+const goToSLide = function (slide) {
+  slides.forEach((slide, i) => {
+    slide.style.transform = `translateX(${100 * (i - curSlide)}%)`;
+  });
+};
+goToSLide(0);
+
+// Next slide
+const nexSlide = function () {
+  if (curSlide === maxSlide - 1) {
+    curSlide = 0;
+  } else {
+    curSlide++;
+  }
+  goToSLide(curSlide);
+};
+
+const prevSlide = function () {
+  if (curSlide === 0) {
+    curSlide = maxSlide - 1;
+  } else {
+    curSlide--;
+  }
+  goToSLide(curSlide);
+};
+
+btnRight.addEventListener("click", nexSlide);
+btnLeft.addEventListener("click", prevSlide);
+
+document.addEventListener("keydown", function (e) {
+  if (e.key === "ArrowLeft") {
+    prevSlide();
+  } else if (e.key === "ArrowRight") {
+    nexSlide();
+  }
+});
+
+// btnLeft.addEventListener("click", function () {
+//   curSlide++;
+//   slides.forEach((slide, i) => {
+//     slide.style.transform = `translateX(${100 * (i + curSlide)}%)`;
+//   });
+// });
+
 // ///////////////////////
 // ///////////////////////
 // ///////////////////////
