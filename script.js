@@ -130,7 +130,7 @@ const sectionsObserver = new IntersectionObserver(revealSections, {
 
 // Callback function to reveal sections
 allSections.forEach(function (section) {
-  // section.classList.add("section--hidden");
+  section.classList.add("section--hidden");
   sectionsObserver.observe(section);
 });
 
